@@ -12,8 +12,14 @@ const UserSchema = new mongoose.Schema({
 
 export const UserModal = mongoose.model("Users", UserSchema);
 
+//? get specific user by id
 export const getUserByEmail = (email: String) => {
   return UserModal.findOne({ email });
 };
+// ? Create User in the database
 export const createUser = (values: Record<string, any>) =>
   new UserModal(values).save().then((user) => user.toObject());
+// ? Update User data
+export const updateUserById = (id: String, values: Record<string, any>) => {
+  UserModal.findByIdAndUpdate(id, values);
+};
