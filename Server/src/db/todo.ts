@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { UserModal } from "./users";
 
 const todoSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -12,9 +11,11 @@ const todoSchema = new mongoose.Schema({
 });
 export const TodoModal = mongoose.model("Todo", todoSchema);
 
-export const getTodo = (user_id: String) => {
-  UserModal.find({ user_id });
-};
-
+export const getTodo = (user_id: String) => TodoModal.find({ user: user_id });
 export const createTodo = (values: Record<string, any>) =>
   new TodoModal(values).save().then((todo) => todo.toObject());
+export const deleteTodo = (id: String) =>
+  TodoModal.findByIdAndDelete({ _id: id });
+export const updateTodo = (id: String, values: Record<string, any>) => {
+  return TodoModal.findByIdAndUpdate(id, values);
+};
