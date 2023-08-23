@@ -11,7 +11,8 @@ const todoSchema = new mongoose.Schema({
 });
 export const TodoModal = mongoose.model("Todo", todoSchema);
 
-export const getTodo = (user_id: String) => TodoModal.find({ user: user_id });
+export const getTodo = (user: String) => TodoModal.find({ user });
+export const getTodoById = (id: String) => TodoModal.findById({ _id: id });
 export const createTodo = (values: Record<string, any>) =>
   new TodoModal(values).save().then((todo) => todo.toObject());
 export const deleteTodo = (id: String) =>
