@@ -16,6 +16,10 @@ export const UserModal = mongoose.model("Users", UserSchema);
 export const getUserByEmail = (email: String) => {
   return UserModal.findOne({ email });
 };
+export const getUserByToken = (token: String) =>
+  UserModal.findOne({
+    "auth.token": token,
+  });
 // ? Create User in the database
 export const createUser = (values: Record<string, any>) =>
   new UserModal(values).save().then((user) => user.toObject());
