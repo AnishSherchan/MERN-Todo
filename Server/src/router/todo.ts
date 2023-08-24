@@ -5,10 +5,11 @@ import {
   deleteUserTodo,
   updateUserTodo,
 } from "../controller/todo";
+import { isAuthenticated } from "../middleware";
 
 export default (router: express.Router) => {
-  router.post("/todo/create", createNewTodo);
-  router.get("/todo", getUserTodo);
-  router.delete("/todo/delete", deleteUserTodo);
-  router.put("/todo/update", updateUserTodo);
+  router.post("/todo/create", isAuthenticated, createNewTodo);
+  router.get("/todo", isAuthenticated, getUserTodo);
+  router.delete("/todo/delete", isAuthenticated, deleteUserTodo);
+  router.put("/todo/update", isAuthenticated, updateUserTodo);
 };
