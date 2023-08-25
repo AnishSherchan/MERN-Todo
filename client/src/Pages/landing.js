@@ -4,11 +4,11 @@ import InputField from "../components/input";
 import { useForm } from "react-hook-form";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import KeyIcon from "@mui/icons-material/Key";
+import Button from "../components/button";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Landing = () => {
   const [varient, setVarient] = useState("login");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   const {
     register,
@@ -33,7 +33,7 @@ const Landing = () => {
             autoComplete="email"
             register={{
               ...register("email", {
-                required: "Email is empty!",
+                required: "Email is reqiured!",
                 maxLength: {
                   value: 30,
                   message: "Exceeds maximum length of 20 characters!",
@@ -46,10 +46,30 @@ const Landing = () => {
             }}
             error={errors.email}
           />
-          <label className="text-red-500 text-xs">
-            {errors.email?.message}
-          </label>
+          <label className="text-red-500">{errors.email?.message}</label>
         </div>
+
+        {varient === "register" && (
+          <div>
+            <InputField
+              icon={AccountCircleIcon}
+              type="text"
+              autoComplete="username"
+              placeholder="Username"
+              register={{
+                ...register("username", {
+                  required: "Username is reqiured!",
+                  minLength: {
+                    value: 4,
+                    message: "Minimum length is 4 characters.",
+                  },
+                }),
+              }}
+              error={errors.username}
+            />
+            <label className="text-red-500 ">{errors.username?.message}</label>
+          </div>
+        )}
 
         <div>
           <InputField
@@ -68,18 +88,26 @@ const Landing = () => {
             }}
             error={errors.password}
           />
-          <label className="text-red-500 text-xs">
-            {errors.password?.message}
-          </label>
+          <label className="text-red-500 ">{errors.password?.message}</label>
         </div>
 
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className=" text-white w-full  bg-[#3F3D56] rounded-full p-2 px-3"
-        >
-          Submit
-        </button>
+        <Button
+          type="primary"
+          title={varient === "login" ? "Login" : "Register an Account"}
+          handleClick={handleSubmit(onSubmit)}
+        />
       </form>
+      <div className=" -mt-4">
+        <Button
+          type="secondary"
+          title={varient === "login" ? "Create An Account" : "Have an Account?"}
+          handleClick={() => {
+            setVarient((currentVarient) =>
+              currentVarient === "login" ? "register" : "login"
+            );
+          }}
+        />
+      </div>
     </Container>
   );
 };
