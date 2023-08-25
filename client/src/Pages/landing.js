@@ -6,20 +6,86 @@ import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import KeyIcon from "@mui/icons-material/Key";
 import Button from "../components/button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import useFetch from "../utils/api";
+import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  const history = useNavigate();
   const [varient, setVarient] = useState("login");
-
+  const { loading, postData } = useFetch();
   const {
     register,
     handleSubmit,
-    setValue,
-    reset,
+    // setValue,
+    // reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    if (varient === "login") {
+      try {
+        const user = await postData("/auth/login", data);
+        console.log(user);
+        if (user) {
+          toast.success("🦄 Welcome back!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          history("/home");
+        } else {
+          throw new Error("Email or Password is invalid");
+        }
+      } catch (error) {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } else {
+      try {
+        const user = await postData("/auth/register", data);
+        if (user) {
+          toast.success(`User resgiter Sucessfull`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          history("/home");
+        } else {
+          throw new Error("User already exist");
+        }
+      } catch (error) {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
   };
   return (
     <Container>
@@ -34,13 +100,9 @@ const Landing = () => {
             register={{
               ...register("email", {
                 required: "Email is reqiured!",
-                maxLength: {
-                  value: 30,
-                  message: "Exceeds maximum length of 20 characters!",
-                },
-                minLength: {
-                  value: 4,
-                  message: "Minimum length is 4 characters.",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                  message: "Invalid email format",
                 },
               }),
             }}
@@ -93,7 +155,18 @@ const Landing = () => {
 
         <Button
           type="primary"
-          title={varient === "login" ? "Login" : "Register an Account"}
+          title={
+            loading ? (
+              <div className="flex items-center justify-center gap-3">
+                <CircularProgress color="inherit" size="23px" /> Loading
+              </div>
+            ) : varient === "login" ? (
+              "Login"
+            ) : (
+              "Register an Account"
+            )
+          }
+          // title={<CircularProgress color="inherit" size="23px" />}
           handleClick={handleSubmit(onSubmit)}
         />
       </form>

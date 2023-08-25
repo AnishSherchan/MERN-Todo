@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./Pages/landing";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const router = createBrowserRouter([
@@ -9,16 +11,21 @@ function App() {
       element: <Landing />,
     },
     {
-      path: "/test",
+      path: "/home",
       element: (
         <div>
-          hi <Link to="/">landing</Link>
+          Todos <Link to="/">landing</Link>
         </div>
       ),
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </>
+  );
 }
 
 export default App;
