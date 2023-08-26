@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./Pages/landing";
 import Todo from "./Pages/todo";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,10 +15,9 @@ function App() {
     {
       path: "/home",
       element: (
-        <Todo />
-        // <div>
-        //    <Link to="/">landing</Link>
-        // </div>
+        <PrivateRoute>
+          <Todo />
+        </PrivateRoute>
       ),
     },
   ]);
@@ -28,6 +28,19 @@ function App() {
       <ToastContainer />
     </>
   );
+}
+
+function PrivateRoute({ children }) {
+  const navigate = useNavigate();
+  const token = localStorage.token;
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate, token]);
+
+  return token ? <>{children}</> : null;
 }
 
 export default App;

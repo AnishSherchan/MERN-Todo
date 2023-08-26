@@ -50,6 +50,7 @@ export const userLogin = async (
     if (expectedHash !== user.auth.password) {
       return res.sendStatus(403);
     }
+    // ? Technique for regenerating new token each time user logins
     // const salt = random();
     // user.auth.token = authentication(salt, user._id.toString());
     // await user.save();
