@@ -7,7 +7,7 @@ export const isAuthenticated = async (
   next: express.NextFunction
 ) => {
   try {
-    const sessionToken = req.cookies["KeyTodo"];
+    const sessionToken = req.header("token");
     if (!sessionToken) {
       return res.sendStatus(403);
     }

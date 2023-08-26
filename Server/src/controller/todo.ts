@@ -12,7 +12,7 @@ export const getUserTodo = async (
   res: express.Response
 ) => {
   try {
-    const { user_id } = req.body;
+    const user_id = req.header("user_id");
     if (!user_id) {
       res.sendStatus(400);
     }

@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
   const history = useNavigate();
-  const [varient, setVarient] = useState("login");
+  const [variant, setVariant] = useState("login");
   const { loading, postData } = useFetch();
   const {
     register,
@@ -24,7 +24,7 @@ const Landing = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    if (varient === "login") {
+    if (variant === "login") {
       try {
         const user = await postData("/auth/login", data);
         console.log(user);
@@ -39,6 +39,8 @@ const Landing = () => {
             progress: undefined,
             theme: "light",
           });
+          localStorage.setItem("token", user.auth.token);
+          localStorage.setItem("id", user._id);
           history("/home");
         } else {
           throw new Error("Email or Password is invalid");
@@ -59,7 +61,7 @@ const Landing = () => {
       try {
         const user = await postData("/auth/register", data);
         if (user) {
-          toast.success(`User resgiter Sucessfull`, {
+          toast.success(`User register Successful`, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -99,7 +101,7 @@ const Landing = () => {
             autoComplete="email"
             register={{
               ...register("email", {
-                required: "Email is reqiured!",
+                required: "Email is required!",
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                   message: "Invalid email format",
@@ -111,7 +113,7 @@ const Landing = () => {
           <label className="text-red-500">{errors.email?.message}</label>
         </div>
 
-        {varient === "register" && (
+        {variant === "register" && (
           <div>
             <InputField
               icon={AccountCircleIcon}
@@ -120,7 +122,7 @@ const Landing = () => {
               placeholder="Username"
               register={{
                 ...register("username", {
-                  required: "Username is reqiured!",
+                  required: "Username is required!",
                   minLength: {
                     value: 4,
                     message: "Minimum length is 4 characters.",
@@ -141,7 +143,7 @@ const Landing = () => {
             placeholder="Enter your password"
             register={{
               ...register("password", {
-                required: "Password is reqiured!",
+                required: "Password is required!",
                 minLength: {
                   value: 4,
                   message: "Minimum length is 4 characters.",
@@ -160,7 +162,7 @@ const Landing = () => {
               <div className="flex items-center justify-center gap-3">
                 <CircularProgress color="inherit" size="23px" /> Loading
               </div>
-            ) : varient === "login" ? (
+            ) : variant === "login" ? (
               "Login"
             ) : (
               "Register an Account"
@@ -173,10 +175,10 @@ const Landing = () => {
       <div className=" -mt-4">
         <Button
           type="secondary"
-          title={varient === "login" ? "Create An Account" : "Have an Account?"}
+          title={variant === "login" ? "Create An Account" : "Have an Account?"}
           handleClick={() => {
-            setVarient((currentVarient) =>
-              currentVarient === "login" ? "register" : "login"
+            setVariant((currentVariant) =>
+              currentVariant === "login" ? "register" : "login"
             );
           }}
         />

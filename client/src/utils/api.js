@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 function useFetch() {
-  const baseApiUrl = "https://todo-mern-lsb8.onrender.com"; // Base URL
-
+  // const baseApiUrl = "https://todo-mern-lsb8.onrender.com"; // Base URL
+  const baseApiUrl = "http://localhost:5000";
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +11,14 @@ function useFetch() {
     const url = `${baseApiUrl}${endpoint}`;
     try {
       setLoading(true);
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          user_id: localStorage.id, // Add the token to the Authorization header
+          token: localStorage.token, // Add the token to the Authorization header
+        },
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -25,6 +32,7 @@ function useFetch() {
   }
 
   async function postData(endpoint, newData) {
+    console.log(newData);
     const url = `${baseApiUrl}${endpoint}`;
     try {
       setLoading(true);
@@ -32,6 +40,7 @@ function useFetch() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          token: localStorage.token, // Add the token to the Authorization header
         },
         body: JSON.stringify(newData),
       });
@@ -51,6 +60,7 @@ function useFetch() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          token: localStorage.token, // Add the token to the Authorization header
         },
         body: JSON.stringify(updatedData),
       });

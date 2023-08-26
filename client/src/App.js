@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "./Pages/landing";
+import Todo from "./Pages/todo";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,9 +14,10 @@ function App() {
     {
       path: "/home",
       element: (
-        <div>
-          Todos <Link to="/">landing</Link>
-        </div>
+        <Todo />
+        // <div>
+        //    <Link to="/">landing</Link>
+        // </div>
       ),
     },
   ]);

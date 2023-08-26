@@ -11,8 +11,8 @@ export const registerUser = async (
     if (!email || !password || !username) {
       return res.sendStatus(400);
     }
-    const exisitingUser = await getUserByEmail(email);
-    if (exisitingUser) {
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
       return res.sendStatus(400);
     }
     const salt = random();
@@ -50,10 +50,10 @@ export const userLogin = async (
     if (expectedHash !== user.auth.password) {
       return res.sendStatus(403);
     }
-    const salt = random();
-    user.auth.token = authentication(salt, user._id.toString());
-    await user.save();
-    res.cookie("KeyTodo", user.auth.token);
+    // const salt = random();
+    // user.auth.token = authentication(salt, user._id.toString());
+    // await user.save();
+    // res.cookie("KeyTodo", user.auth.token);
     return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
