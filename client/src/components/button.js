@@ -1,6 +1,6 @@
 import React from "react";
 
-const Button = ({ type, title, handleClick }) => {
+const Button = ({ type, title, handleClick, icon: Icon }) => {
   let buttonStyle;
   switch (type) {
     case "primary":
@@ -8,6 +8,9 @@ const Button = ({ type, title, handleClick }) => {
       break;
     case "secondary":
       buttonStyle = "bg-white text-primaryButton border font-semibold";
+      break;
+    case "button":
+      buttonStyle = " bg-transparent shadow-none";
       break;
     default:
       buttonStyle = "bg-primaryButton text-white";
@@ -18,7 +21,7 @@ const Button = ({ type, title, handleClick }) => {
       onClick={handleClick}
       className={` w-full rounded-full font-medium shadow-lg p-2 px-3 ${buttonStyle}`}
     >
-      {title}
+      {title ? title : <Icon />}
     </button>
   );
 };

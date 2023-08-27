@@ -25,6 +25,7 @@ function useFetch() {
       const jsonData = await response.json();
       setData(jsonData);
       setLoading(false);
+      return jsonData;
     } catch (error) {
       setError(error);
       setLoading(false);

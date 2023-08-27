@@ -4,24 +4,24 @@ import SimpleModal from "./SimpleModal";
 import NoData from "./NoData";
 import NavItems from "./NavItems";
 import useFetch from "../utils/api";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import { pink } from "@mui/material/colors";
+// Icons
+import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
+import DoneIcon from "@mui/icons-material/Done";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 
+import { setTodo } from "../store/slices/todo";
+import { useDispatch } from "react-redux";
+
 const TodoItems = () => {
-  const { data, loading, error, fetchData } = useFetch();
+  const dispatch = useDispatch();
+  const { data, loading, fetchData } = useFetch();
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
   const [Tododata, setData] = useState(null);
-  //   const data = useSelector((state) => {
-  //     return state.todo;
-  //   });
-  //   const completedTodoList = data?.filter((item) => item?.completed === true);
-  //   const pendingTodoList = data?.filter((item) => item?.completed === false);
   let todoToRender = [];
   const completedTodoList = data?.filter((item) => item?.status === true);
   const pendingTodoList = data?.filter((item) => item?.status === false);
@@ -33,29 +33,19 @@ const TodoItems = () => {
     todoToRender = pendingTodoList;
   }
 
-  //   const removeTodo = (datas) => {
-  //     const todoIndex = data.findIndex((item) => item.todo === datas);
-  //     dispatch(removeaTodo(todoIndex));
-  //   };
   const handelEdit = (data) => {
     setIsOpen(true);
     setData(data);
   };
-  //   const completedTodo = (datas) => {
-  //     const {
-  //       item: { todo: task, completed: status },
-  //     } = datas;
-  //     const todoIndex = data.findIndex((item) => item.todo === task);
-  //     const UpdateData = {
-  //       index: todoIndex,
-  //       status: !status, // Inverting the status value using the NOT operator (!)
-  //     };
-  //     // console.log(UpdateData);
-  //     dispatch(completeTodo(UpdateData));
-  //   };
+
+  const getData = async () => {
+    const data = await fetchData("/todo");
+    dispatch(setTodo(data));
+  };
 
   useEffect(() => {
-    fetchData("/todo");
+    getData();
+    // eslint-disable-next-line
   }, []);
   return (
     <div>
@@ -80,18 +70,12 @@ const TodoItems = () => {
               key={index}
             >
               <div className="flex gap-3">
-                <button
-                //   onClick={() => {
-                //     completedTodo({ index, item });
-                //   }}
-                >
+                <button>
                   {item.completed ? (
-                    <CheckCircleOutlineIcon color="success" />
+                    <DoneIcon color="success" />
                   ) : (
-                    <CheckCircleIcon color="success" />
+                    <PanoramaFishEyeIcon className=" text-yellow-400" />
                   )}
-                  {/* <Icon icon="system-uicons:circle" width="23" />
-                  <Icon icon="fluent-mdl2:completed" color="green" width="20" /> */}
                 </button>
                 <p
                   className={`${
@@ -102,24 +86,20 @@ const TodoItems = () => {
                 </p>
               </div>
               <div className="flex gap-2 items-center">
-                <CheckCircleOutlineIcon color="success" />
+                <DoneIcon color="success" />
 
-                <button
-                //   onClick={() => {
-                //     removeTodo(item.todo);
-                //   }}
-                >
-                  <DeleteForeverIcon sx={{ color: pink[500] }} />
+                <button>
+                  <DeleteOutlineRoundedIcon className=" text-red-400" />
                 </button>
                 <button onClick={() => handelEdit({ todo: item.title, index })}>
                   {/* <Icon icon="fluent:edit-20-regular" color="blue" width="20" /> */}
-                  <EditNoteIcon color="secondary" />
+                  <CreateOutlinedIcon className=" text-blue-500" />
                 </button>
               </div>
             </div>
           ))
         ) : (
-          <NoData title="No todos!" image="/undraw_taking_notes_re_bnaf.svg" />
+          <NoData title="No todo!" image="/undraw_taking_notes_re_bnaf.svg" />
         )
       ) : (
         <NoData
@@ -135,7 +115,6 @@ const TodoItems = () => {
           setData(null);
         }}
         modalData={Tododata}
-        setData={setData}
       />
     </div>
   );

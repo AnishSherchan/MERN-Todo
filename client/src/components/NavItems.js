@@ -1,9 +1,11 @@
 import React from "react";
 import Button from "./button";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+
 const NavItems = ({ selectedFilter, setSelectedFilter, setIsOpen }) => {
   const selectedFilters = selectedFilter;
   return (
-    <div className=" flex justify-between flex-wrap items-center">
+    <div className=" flex mb-6 justify-between flex-wrap items-center">
       <div className=" flex gap-7 flex-wrap">
         <p
           className={` cursor-pointer${
@@ -38,7 +40,8 @@ const NavItems = ({ selectedFilter, setSelectedFilter, setIsOpen }) => {
       </div>
       <div className=" flex justify-end">
         <Button
-          title="Add"
+          icon={AddOutlinedIcon}
+          type="button"
           handleClick={() => {
             setIsOpen(true);
           }}
