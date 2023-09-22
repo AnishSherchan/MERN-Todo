@@ -13,15 +13,17 @@ import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 
-import { setTodo } from "../store/slices/todo";
+import { setTodo, completeTodo, removeTodo } from "../store/slices/todo";
 import { useDispatch } from "react-redux";
 
 const TodoItems = () => {
   const dispatch = useDispatch();
-  const { data, loading, fetchData } = useFetch();
+  const { data, loading, fetchData, putData, deleteData } = useFetch();
+
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
   const [Tododata, setData] = useState(null);
+
   let todoToRender = [];
   const completedTodoList = data?.filter((item) => item?.status === true);
   const pendingTodoList = data?.filter((item) => item?.status === false);
@@ -38,8 +40,29 @@ const TodoItems = () => {
     setData(data);
   };
 
+  const completeTodoAction = async (data) => {
+    const { title, status, _id: id } = data;
+    const task = {
+      title,
+      status: !status,
+      id,
+    };
+    dispatch(completeTodo(task));
+    const UpdatedData = await putData("/todo/update", task);
+    console.log(UpdatedData);
+  };
+
+  const deleteTodoAction = async (data) => {
+    const { _id: id } = data;
+    const taskId = { id };
+    const deleteComplete = await deleteData("/todo/delete", taskId);
+    console.log(deleteComplete);
+    dispatch(removeTodo(data));
+  };
+
   const getData = async () => {
     const data = await fetchData("/todo");
+    console.log(data);
     dispatch(setTodo(data));
   };
 
@@ -70,28 +93,42 @@ const TodoItems = () => {
               key={index}
             >
               <div className="flex gap-3">
-                <button>
-                  {item.completed ? (
+                <button
+                  className="cursor-pointer"
+                  onClick={() => {
+                    completeTodoAction(item);
+                  }}
+                >
+                  {item.status ? (
                     <DoneIcon color="success" />
                   ) : (
                     <PanoramaFishEyeIcon className=" text-yellow-400" />
                   )}
                 </button>
                 <p
-                  className={`${
-                    item.completed ? "line-through opacity-60" : ""
-                  }`}
+                  className={`${item.status ? "line-through opacity-60" : ""}`}
                 >
                   {item.title}
                 </p>
               </div>
               <div className="flex gap-2 items-center">
-                <DoneIcon color="success" />
+                <DoneIcon
+                  onClick={() => {
+                    completeTodoAction(item);
+                  }}
+                  className="cursor-pointer"
+                  color="success"
+                />
 
                 <button>
-                  <DeleteOutlineRoundedIcon className=" text-red-400" />
+                  <DeleteOutlineRoundedIcon
+                    onClick={() => {
+                      deleteTodoAction(item);
+                    }}
+                    className=" text-red-400"
+                  />
                 </button>
-                <button onClick={() => handelEdit({ todo: item.title, index })}>
+                <button onClick={() => handelEdit({ todo: item.title, item })}>
                   {/* <Icon icon="fluent:edit-20-regular" color="blue" width="20" /> */}
                   <CreateOutlinedIcon className=" text-blue-500" />
                 </button>
@@ -114,6 +151,7 @@ const TodoItems = () => {
           setIsOpen(false);
           setData(null);
         }}
+        getData={getData}
         modalData={Tododata}
       />
     </div>

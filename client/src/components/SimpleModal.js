@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-// import { addTodo, editTodo } from "../../store/slices/UserSlice";
+import { editTodo } from "../store/slices/todo";
+import useFetch from "../utils/api";
 
-const SimpleModal = ({ isOpen, closeModal, title, modalData }) => {
-  //   const dispatch = useDispatch();
+const SimpleModal = ({ isOpen, closeModal, title, getData, modalData }) => {
+  const dispatch = useDispatch();
+  const { putData } = useFetch();
+
   //Importing React Hook form for validating user input
   const {
     register,
@@ -18,19 +21,24 @@ const SimpleModal = ({ isOpen, closeModal, title, modalData }) => {
   //     return state.todo;
   //   });
 
-  const onSubmit = (data) => {
-    //     if (modalData) {
-    //       const { todo: task } = modalData;
-    //       const todoIndex = StateArray.findIndex((item) => item.todo === task);
-    //       const updatedTodo = { task: data.todo, index: todoIndex };
-    //       dispatch(editTodo(updatedTodo));
-    //     } else {
-    //       // completed false means its is not completed
-    //       const todo = { ...data, completed: false };
-    //       dispatch(addTodo(todo));
-    //     }
-    //     closeModal();
-    //     reset();
+  const onSubmit = async (data) => {
+    if (modalData) {
+      console.log(modalData);
+      const {
+        item: { _id: id, status },
+      } = modalData;
+      const updatedTodo = { title: data.todo, id, status };
+      dispatch(editTodo(updatedTodo));
+      const UpdatedData = await putData("/todo/update", updatedTodo);
+      console.log(UpdatedData);
+      getData();
+    } else {
+      // completed false means its is not completed
+      const todo = { ...data, completed: false };
+      // dispatch(addTodo(todo));
+    }
+    closeModal();
+    reset();
   };
 
   //Pre filling input field with user's todo Data
