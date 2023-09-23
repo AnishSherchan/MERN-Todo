@@ -1,6 +1,6 @@
 import React from "react";
 
-const Button = ({ type, title, handleClick, icon: Icon }) => {
+const Button = ({ type, title, handleClick, disable, icon: Icon }) => {
   let buttonStyle;
   switch (type) {
     case "primary":
@@ -19,6 +19,7 @@ const Button = ({ type, title, handleClick, icon: Icon }) => {
   return (
     <button
       onClick={handleClick}
+      disabled={disable}
       className={` w-full rounded-full font-medium shadow-lg p-2 px-3 ${buttonStyle}`}
     >
       {title ? title : <Icon />}

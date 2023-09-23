@@ -29,8 +29,8 @@ export const createNewTodo = async (
   res: express.Response
 ) => {
   try {
-    const { title, status, user } = req.body;
-
+    const { title, status } = req.body;
+    const user = req.header("user_id");
     if (!title || status === undefined || !user) {
       return res.sendStatus(400);
     }

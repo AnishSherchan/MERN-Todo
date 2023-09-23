@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SimpleModal from "./SimpleModal";
 import Button from "./button";
 
-const NoData = ({ title, button, image }) => {
+const NoData = ({ title, button, image, getData }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className=" flex flex-col flex-wrap mt-8 items-center gap-7 justify-center">
@@ -11,7 +11,7 @@ const NoData = ({ title, button, image }) => {
         {title}
       </p>
       {button && <Button handleClick={() => setIsOpen(true)} title="Add" />}
-      <SimpleModal isOpen={isOpen} closeModal={setIsOpen} />
+      <SimpleModal getData={getData} isOpen={isOpen} closeModal={setIsOpen} />
     </div>
   );
 };

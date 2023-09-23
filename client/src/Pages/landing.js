@@ -27,7 +27,6 @@ const Landing = () => {
     if (variant === "login") {
       try {
         const user = await postData("/auth/login", data);
-        console.log(user);
         if (user) {
           toast.success("🦄 Welcome back!", {
             position: "top-right",
@@ -157,6 +156,7 @@ const Landing = () => {
 
         <Button
           type="primary"
+          disable={loading}
           title={
             loading ? (
               <div className="flex items-center justify-center gap-3">

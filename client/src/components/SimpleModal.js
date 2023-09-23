@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { editTodo } from "../store/slices/todo";
+import { editTodo, addTodo } from "../store/slices/todo";
 import useFetch from "../utils/api";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const SimpleModal = ({ isOpen, closeModal, title, getData, modalData }) => {
   const dispatch = useDispatch();
-  const { putData } = useFetch();
+  const { putData, postData, loading } = useFetch();
 
   //Importing React Hook form for validating user input
   const {
@@ -34,8 +35,10 @@ const SimpleModal = ({ isOpen, closeModal, title, getData, modalData }) => {
       getData();
     } else {
       // completed false means its is not completed
-      const todo = { ...data, completed: false };
-      // dispatch(addTodo(todo));
+      const todo = { title: data.todo, status: false, user: localStorage.id };
+      await postData("/todo/create", todo);
+      dispatch(addTodo(todo));
+      getData();
     }
     closeModal();
     reset();
@@ -90,8 +93,23 @@ const SimpleModal = ({ isOpen, closeModal, title, getData, modalData }) => {
           <button
             onClick={handleSubmit(onSubmit)}
             className=" text-white  bg-[#3F3D56] rounded-full p-2 px-3"
+            disabled={loading}
           >
-            {modalData ? "Edit To-do" : "Add To-do"}
+            {modalData ? (
+              loading ? (
+                <div className="flex items-center justify-center gap-3">
+                  <CircularProgress color="inherit" size="23px" /> Loading
+                </div>
+              ) : (
+                "Edit To-do"
+              )
+            ) : loading ? (
+              <div className="flex items-center justify-center gap-3">
+                <CircularProgress color="inherit" size="23px" /> Loading
+              </div>
+            ) : (
+              "Add To-do"
+            )}
           </button>
           <button
             onClick={() => {

@@ -141,6 +141,7 @@ const TodoItems = () => {
       ) : (
         <NoData
           image="/undraw_mornings_re_cofi.svg"
+          getData={getData}
           title="What kind of day shall we have today."
           button={true}
         />
