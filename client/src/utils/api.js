@@ -33,7 +33,6 @@ function useFetch() {
   }
 
   async function postData(endpoint, newData) {
-    console.log(newData);
     const url = `${baseApiUrl}${endpoint}`;
     try {
       setLoading(true);
@@ -41,7 +40,9 @@ function useFetch() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.token, // Add the token to the Authorization header
+          token: localStorage.token,
+          user_id: localStorage.id,
+          // Add the token to the Authorization header
         },
         body: JSON.stringify(newData),
       });
