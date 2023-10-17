@@ -24,7 +24,14 @@ export const registerUser = async (
         password: authentication(salt, password),
       },
     });
-    return res.status(200).json(user).end();
+
+    // Creating token in first register session
+    const user_token = await getUserByEmail(email).select(
+      "+auth.password +auth.salt +auth.token"
+    );
+    user_token.auth.token = authentication(salt, user._id.toString());
+    await user_token.save();
+    return res.status(200).json(user_token).end();
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
@@ -51,9 +58,9 @@ export const userLogin = async (
       return res.sendStatus(403);
     }
     // ? Technique for regenerating new token each time user logins
-    const salt = random();
-    user.auth.token = authentication(salt, user._id.toString());
-    await user.save();
+    // const salt = random();
+    // user.auth.token = authentication(salt, user._id.toString());
+    // await user.save();
     // res.cookie("KeyTodo", user.auth.token);
     return res.status(200).json(user).end();
   } catch (error) {
