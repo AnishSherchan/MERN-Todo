@@ -11,10 +11,12 @@ export const registerUser = async (
     if (!email || !password || !username) {
       return res.sendStatus(400);
     }
+
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return res.sendStatus(400);
     }
+
     const salt = random();
     const user = await createUser({
       email,
@@ -24,7 +26,6 @@ export const registerUser = async (
         password: authentication(salt, password),
       },
     });
-    return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
@@ -51,9 +52,9 @@ export const userLogin = async (
       return res.sendStatus(403);
     }
     // ? Technique for regenerating new token each time user logins
-    // const salt = random();
-    // user.auth.token = authentication(salt, user._id.toString());
-    // await user.save();
+    const salt = random();
+    user.auth.token = authentication(salt, user._id.toString());
+    await user.save();
     // res.cookie("KeyTodo", user.auth.token);
     return res.status(200).json(user).end();
   } catch (error) {
