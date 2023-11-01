@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 function useFetch() {
-  // const baseApiUrl = "https://todo-mern-lsb8.onrender.com";
-  const baseApiUrl = "http://localhost:5000";
+  const baseApiUrl = "https://todo-mern-lsb8.onrender.com";
+  // const baseApiUrl = "http://localhost:5000";
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
