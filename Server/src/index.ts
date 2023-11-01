@@ -9,7 +9,10 @@ import router from "./router";
 require("dotenv").config();
 
 const app = express();
-const allowedOrigins = ["https://mern-todo-hazel.vercel.app"];
+const allowedOrigins = [
+  "https://mern-todo-hazel.vercel.app",
+  "http://localhost:3000",
+];
 app.use(
   cors({
     origin: function (origin, callback) {
