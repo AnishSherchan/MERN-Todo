@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 function useFetch() {
-  const baseApiUrl = "https://todo-mern-lsb8.onrender.com";
-  // const baseApiUrl = "http://localhost:5000";
+  // const baseApiUrl = "https://todo-mern-lsb8.onrender.com";
+  const baseApiUrl = "http://localhost:5000";
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,6 +18,7 @@ function useFetch() {
           user_id: localStorage.id, // Add the token to the Authorization header
           token: localStorage.token, // Add the token to the Authorization header
         },
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -45,6 +46,7 @@ function useFetch() {
           // Add the token to the Authorization header
         },
         body: JSON.stringify(newData),
+        credentials: "include",
       });
       const jsonData = await response.json();
       setLoading(false);
@@ -65,6 +67,7 @@ function useFetch() {
           token: localStorage.token, // Add the token to the Authorization header
         },
         body: JSON.stringify(updatedData),
+        credentials: "include",
       });
 
       const jsonData = await response.json();
@@ -88,6 +91,7 @@ function useFetch() {
           token: localStorage.token, // Add the token to the Authorization header
         },
         body: JSON.stringify(id),
+        credentials: "include",
       });
 
       const jsonData = await response.json();

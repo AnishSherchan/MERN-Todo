@@ -9,7 +9,13 @@ import router from "./router";
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    credentials: true, // enable set cookie
+  })
+);
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(compression());
