@@ -18,6 +18,7 @@ function useFetch() {
           user_id: localStorage.id, // Add the token to the Authorization header
           token: localStorage.token, // Add the token to the Authorization header
         },
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");

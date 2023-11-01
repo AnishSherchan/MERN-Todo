@@ -9,7 +9,20 @@ import router from "./router";
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+const allowedOrigins = ["https://mern-todo-hazel.vercel.app"];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(compression());
